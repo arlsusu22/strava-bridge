@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Mova Strava Bridge</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; margin: 40px; }
+      .box { max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 12px; }
+      h1 { font-size: 20px; }
+      code { background: #f7f7f7; padding: 2px 6px; border-radius: 6px; }
+      button { padding: 10px 16px; border-radius: 8px; border: 0; background: #000; color: #fff; cursor: pointer; }
+    </style>
+  </head>
+  <body>
+    <div class="box">
+      <h1>Mova Strava Bridge</h1>
+      <p>This page receives Strava's HTTPS redirect and opens the app using a custom scheme.</p>
+      <p>If nothing happens automatically, tap the button.</p>
+      <p>Status: <span id="status">Waiting...</span></p>
+      <p><button id="open">Open App</button></p>
+    </div>
+    <script>
+      const statusEl = document.getElementById('status');
+      const params = new URLSearchParams(location.search);
+      const code = params.get('code');
+
+      function openAppWithCode(c) {
+        const url = 'mova://auth/strava' + (c ? ('?code=' + encodeURIComponent(c)) : '');
+        location.href = url;
+      }
+
+      if (code) {
+        statusEl.textContent = 'Code found. Opening app...';
+        openAppWithCode(code);
+      } else {
+        statusEl.textContent = 'No code provided by Strava.';
+      }
+
+      document.getElementById('open').addEventListener('click', () => openAppWithCode(code));
+    </script>
+  </body>
+</html>
